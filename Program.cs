@@ -23,19 +23,19 @@ var summaries = new[]
 
 app.MapGet("/", () => "OK");
 
-app.MapGet("/async-slow", async () => {
-    await Task.Delay(1000);
+app.MapGet("/async-slow", async (int? delay = null) => {
+    await Task.Delay(delay ?? 1000);
     return "OK";
 });
 
-app.MapGet("/sync-slow", () => {
-    Thread.Sleep(1000);
+app.MapGet("/sync-slow", (int? delay = null) => {
+    Thread.Sleep(delay ?? 1000);
     return "OK";
 });
 
-app.MapGet("/very-bad-sync-slow", async () => {
+app.MapGet("/very-bad-sync-slow", async (int? delay = null) => {
     var syncTask = Task.Run(() => {
-        Thread.Sleep(1000);
+        Thread.Sleep(delay ?? 1000);
         return "OK";
     });
     return syncTask.Result;
