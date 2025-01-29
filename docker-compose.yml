@@ -21,4 +21,4 @@ services:
       dockerfile: Dockerfile.bombardier
   
     depends_on:
-      - web
+      - nginx
