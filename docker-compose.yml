@@ -14,3 +14,11 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - web
+
+  bombardier:
+    build:
+      context: .
+      dockerfile: Dockerfile.bombardier
+  
+    depends_on:
+      - web
