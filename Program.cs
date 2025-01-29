@@ -23,6 +23,24 @@ var summaries = new[]
 
 app.MapGet("/", () => "OK");
 
+app.MapGet("/async-slow", async () => {
+    await Task.Delay(1000);
+    return "OK";
+});
+
+app.MapGet("/sync-slow", () => {
+    Thread.Sleep(1000);
+    return "OK";
+});
+
+app.MapGet("/very-bad-sync-slow", async () => {
+    var syncTask = Task.Run(() => {
+        Thread.Sleep(1000);
+        return "OK";
+    });
+    return syncTask.Result;
+});
+
 app.MapGet("/weatherforecast", () =>
 {
     var forecast =  Enumerable.Range(1, 5).Select(index =>
