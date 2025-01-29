@@ -4,5 +4,4 @@ WORKDIR /app
 
 RUN go install github.com/codesenberg/bombardier@latest
 
-# set the entrypoint to wait forever
-ENTRYPOINT ["tail", "-f", "/dev/null"]
+ENTRYPOINT ["sh", "-c", "trap : TERM INT; sleep infinity & wait"]
