@@ -19,6 +19,6 @@ jobs:
     - name: Runs the Docker image
       run: docker compose up -d
     - name: Run a moderate load test
-      run: docker exec -it dotnet-nginx-testing-bombardier-1 bombardier nginx:18151/async-slow -c 100
+      run: docker exec dotnet-nginx-testing-bombardier-1 bombardier nginx:18151/async-slow -c 100
     - name: Stop the Docker image
       run: docker compose down
