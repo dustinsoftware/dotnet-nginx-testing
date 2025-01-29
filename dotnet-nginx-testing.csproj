@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <ThreadPoolMinThreads>300</ThreadPoolMinThreads>
-  </PropertyGroup>  
+    <ThreadPoolMinThreads>500</ThreadPoolMinThreads>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.4" />
