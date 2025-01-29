@@ -16,3 +16,9 @@ jobs:
     - uses: actions/checkout@v4
     - name: Build the Docker image
       run: docker compose build
+    - name: Runs the Docker image
+      run: docker compose up -d
+    - name: Run a moderate load test
+      run: docker exec -it dotnet-nginx-testing-bombardier-1 bombardier nginx:18151/async-slow -c 100
+    - name: Stop the Docker image
+      run: docker compose down
