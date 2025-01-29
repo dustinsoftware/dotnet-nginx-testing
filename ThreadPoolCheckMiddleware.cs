@@ -13,7 +13,7 @@ public class ThreadPoolCheckMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
-        if (ThreadPool.PendingWorkItemCount > 300)
+        if (ThreadPool.PendingWorkItemCount > 1000)
         {
             context.Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
             await context.Response.WriteAsync("Service Unavailable");
