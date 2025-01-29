@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <ThreadPoolMinThreads>500</ThreadPoolMinThreads>
+    <ThreadPoolMinThreads>300</ThreadPoolMinThreads>
   </PropertyGroup>  
 
   <ItemGroup>
