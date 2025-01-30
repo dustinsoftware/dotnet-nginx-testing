@@ -27,7 +27,7 @@ jobs:
     strategy:
       matrix:
         thread_pool_limiter: [200, 400, 800]
-        route_name: [async-slow, sync-slow, very-bad-async-slow]
+        route_name: [async-slow, sync-slow, very-bad-sync-slow]
 
     env:
       ROUTE_NAME: ${{ matrix.route_name }}
