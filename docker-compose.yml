@@ -15,6 +15,11 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - web
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:18151/healthcheck || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   bombardier:
     build:
@@ -26,13 +31,14 @@ services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlserver
+    volumes:
+      - ./sqlserver-init:/docker-entrypoint-initdb.d
     environment:
       SA_PASSWORD: "YourStrongPassw0rd"
       ACCEPT_EULA: "Y"
-    volumes:
-      - ./sqlserver-init:/docker-entrypoint-initdb.d
     healthcheck:
-      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -C -U sa -P YourStrongPassw0rd -Q 'SELECT 1 FROM MyDatabase.MyTable'"]
-      interval: 1s
+      # test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -b -C -S sqlserver -U sa -P YourStrongPassw0rd -d master -Q 'SELECT 1'"]
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -b -C -S sqlserver -U sa -P YourStrongPassw0rd -d master -Q 'SELECT 1' && sleep 5 && /opt/mssql-tools18/bin/sqlcmd -b -C -S sqlserver -U sa -P YourStrongPassw0rd -d master -i /docker-entrypoint-initdb.d/000-initialschema.sql"]
+      interval: 5s
       timeout: 10s
       retries: 30

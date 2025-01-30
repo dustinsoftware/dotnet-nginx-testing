@@ -26,21 +26,12 @@ INSERT INTO MyTable (Id, Name, CreatedAt) VALUES (12, 'Test Name 12', GETDATE())
 INSERT INTO MyTable (Id, Name, CreatedAt) VALUES (13, 'Test Name 13', GETDATE());
 GO
 
-CREATE PROCEDURE ListNamesSlow
-AS
-BEGIN
-    WAITFOR DELAY '00:00:05';
-    SELECT TOP 10 Name
-    FROM MyTable
-    ORDER BY CreatedAt DESC;
-END;
+
+CREATE LOGIN dbuser WITH PASSWORD = 'YourStrongPassw0rd';
 GO
 
-CREATE PROCEDURE ListNamesFast
-AS
-BEGIN
-    SELECT TOP 10 Name
-    FROM MyTable
-    ORDER BY CreatedAt DESC;
-END;
+CREATE USER dbuser FOR LOGIN dbuser;
+GO
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::dbo TO dbuser;
 GO
