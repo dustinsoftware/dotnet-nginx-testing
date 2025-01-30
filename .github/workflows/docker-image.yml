@@ -18,13 +18,18 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    name: Run very-bad-sync-slow tests
+    name: Run thread pool limiter tests
 
     needs: build
 
+    strategy:
+      matrix:
+        thread_pool_limiter: [200, 400, 800]
+        route_name: [async-slow, sync-slow, very-bad-async-slow]
+
     env:
-      ROUTE_NAME: "very-bad-sync-slow"
-      THREAD_POOL_LIMITER: "200"
+      ROUTE_NAME: ${{ matrix.route_name }}
+      THREAD_POOL_LIMITER: ${{ matrix.thread_pool_limiter }}
 
     steps:
     - uses: actions/checkout@v4
@@ -41,7 +46,7 @@ jobs:
     - name: Upload logs as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: very-bad-sync-slow
+        name: thread-pool-limiter-${{ matrix.thread_pool_limiter }}-${{ matrix.route_name }}
         path: logs/*.log
     - name: Stop the Docker image
       run: docker compose down
