@@ -19,6 +19,7 @@ declare -a TEST_CASES=(
     "nginx:18151/$ROUTE_NAME -c 100"
     "nginx:18151/$ROUTE_NAME -c 500"
     "nginx:18151/$ROUTE_NAME -c 1000"
+    "nginx:18151/$ROUTE_NAME -c 2000"
 )
 
 # Loop through the test cases and run bombardier for each
