@@ -38,7 +38,7 @@ services:
       ACCEPT_EULA: "Y"
     healthcheck:
       # test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -b -C -S sqlserver -U sa -P YourStrongPassw0rd -d master -Q 'SELECT 1'"]
-      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -b -C -S sqlserver -U sa -P YourStrongPassw0rd -d master -Q 'SELECT 1' && sleep 5 && /opt/mssql-tools18/bin/sqlcmd -b -C -S sqlserver -U sa -P YourStrongPassw0rd -d master -i /docker-entrypoint-initdb.d/000-initialschema.sql"]
-      interval: 5s
-      timeout: 10s
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -b -C -S sqlserver -U sa -P YourStrongPassw0rd -d master -i /docker-entrypoint-initdb.d/000-initialschema.sql"]
+      interval: 10s
+      timeout: 30s
       retries: 30
