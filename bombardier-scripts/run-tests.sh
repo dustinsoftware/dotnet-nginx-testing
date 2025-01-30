@@ -3,6 +3,7 @@
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         --route-name) ROUTE_NAME="$2"; shift ;;
+        --thread-pool-limiter) THREAD_POOL_LIMITER="$2"; shift ;;
         *) echo "Unknown parameter passed: $1"; exit 1 ;;
     esac
     shift
@@ -26,7 +27,11 @@ for TEST_CASE in "${TEST_CASES[@]}"; do
     CONNECTIONS=$(echo $TEST_CASE | awk '{print $3}')
     
     echo "✨ Running test for URL: $URL with $CONNECTIONS connections"
-    bombardier -c $CONNECTIONS -H "use-thread-pool-limiter: 200" $URL
+    if [ -z "$THREAD_POOL_LIMITER" ]; then
+        bombardier -c $CONNECTIONS $URL
+    else
+        bombardier -c $CONNECTIONS -H "thread-pool-limiter: $THREAD_POOL_LIMITER" $URL
+    fi
     
     if [ $? -eq 0 ]; then
         echo "✅ Test for $URL with $CONNECTIONS connections completed successfully."

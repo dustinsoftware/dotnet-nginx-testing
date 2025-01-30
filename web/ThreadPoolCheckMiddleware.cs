@@ -15,7 +15,7 @@ public class ThreadPoolCheckMiddleware
     {
         var pendingWorkItemCount = ThreadPool.PendingWorkItemCount;
 
-        if (int.TryParse(context.Request.Headers["use-thread-pool-limiter"], out var limitCount) && pendingWorkItemCount > limitCount)
+        if (int.TryParse(context.Request.Headers["thread-pool-limiter"], out var limitCount) && pendingWorkItemCount > limitCount)
         {
             context.Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
             logger?.LogWarning("High pending work item count: {PendingWorkItemCount}", pendingWorkItemCount);
