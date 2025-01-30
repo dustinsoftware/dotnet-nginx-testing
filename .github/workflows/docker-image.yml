@@ -62,7 +62,6 @@ jobs:
       with:
         path: logs
     - name: Analyze logs
-      working-directory: logs
       run: |
         ./parse-logs-to-csv.sh
     - name: Upload logs folder
@@ -70,3 +69,9 @@ jobs:
       with:
         name: all-logs
         path: logs
+    - name: Upload results.csv
+      uses: actions/upload-artifact@v4
+      with:
+        name: results
+        path: results.csv
+  
