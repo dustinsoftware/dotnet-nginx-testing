@@ -16,7 +16,7 @@ for TEST_CASE in "${TEST_CASES[@]}"; do
     CONNECTIONS=$(echo $TEST_CASE | awk '{print $3}')
     
     echo "✨ Running test for URL: $URL with $CONNECTIONS connections"
-    bombardier -c $CONNECTIONS -H "use-thread-pool-limiter: true" $URL
+    bombardier -c $CONNECTIONS -H "use-thread-pool-limiter: 200" $URL
     
     if [ $? -eq 0 ]; then
         echo "✅ Test for $URL with $CONNECTIONS connections completed successfully."
