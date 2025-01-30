@@ -12,3 +12,5 @@ Run each of these commands in a new terminal:
 - `docker compose up --build`
 - `docker exec -it dotnet-nginx-testing-web-1 /root/.dotnet/tools/dotnet-counters monitor --process-id 1`
 - `docker exec -it dotnet-nginx-testing-bombardier-1 /bombardier-scripts/run-tests.sh`
+
+There is a list of TEST_CASES in run-tests.sh. Modify that to hit the routes you want while adjusting the minthread count and throttling middleware.
