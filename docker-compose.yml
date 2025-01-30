@@ -39,8 +39,7 @@ services:
       SA_PASSWORD: "YourStrongPassw0rd"
       ACCEPT_EULA: "Y"
     healthcheck:
-      # test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -b -C -S sqlserver -U sa -P YourStrongPassw0rd -d master -Q 'SELECT 1'"]
-      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -b -C -S sqlserver -U sa -P YourStrongPassw0rd -d master -i /docker-entrypoint-initdb.d/000-initialschema.sql"]
+      test: ["CMD-SHELL", "/docker-entrypoint-initdb.d/init.sh"]
       interval: 10s
       timeout: 30s
       retries: 30
