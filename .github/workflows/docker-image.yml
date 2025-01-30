@@ -22,6 +22,8 @@ jobs:
       run: docker exec dotnet-nginx-testing-bombardier-1 /bombardier-scripts/run-tests.sh
     - name: Stop the Docker image
       run: docker compose down
+    - name: Create logs directory
+      run: mkdir -p logs
     - name: Capture logs
       run: docker logs dotnet-nginx-testing-web-1 > logs/web-container.log
     - name: Capture Nginx logs
