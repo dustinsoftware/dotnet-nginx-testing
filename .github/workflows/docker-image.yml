@@ -19,7 +19,7 @@ jobs:
     - name: Runs the Docker image
       run: docker compose up -d
     - name: Run a moderate load test
-      run: docker exec dotnet-nginx-testing-bombardier-1 /bombardier-scripts/run-tests.sh
+      run: docker exec dotnet-nginx-testing-bombardier-1 /bombardier-scripts/run-tests.sh > logs/bombardier-container.log
     - name: Create logs directory
       run: mkdir -p logs
     - name: Capture logs

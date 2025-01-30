@@ -44,21 +44,6 @@ app.MapGet("/very-bad-sync-slow", async (int? delay = null) => {
     return syncTask.Result;
 });
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
-
 app.MapGet("/healthcheck", async () => {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     using var connection = new SqlConnection(connectionString);
@@ -98,8 +83,3 @@ app.UseMiddleware<ThreadPoolCheckMiddleware>();
 
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
