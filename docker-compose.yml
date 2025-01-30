@@ -25,6 +25,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.bombardier
+    volumes:
+      - ./bombardier-scripts:/bombardier-scripts
     depends_on:
       - nginx
 

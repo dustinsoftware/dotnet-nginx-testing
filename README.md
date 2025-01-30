@@ -11,4 +11,4 @@ There are a few endpoints that can be hit
 Run each of these commands in a new terminal:
 - `docker compose up --build`
 - `docker exec -it dotnet-nginx-testing-web-1 /root/.dotnet/tools/dotnet-counters monitor --process-id 1`
-- `docker exec -it dotnet-nginx-testing-bombardier-1 bombardier nginx:18151/async-slow -c 800`
+- `docker exec -it dotnet-nginx-testing-bombardier-1 /bombardier-scripts/run-tests.sh`
