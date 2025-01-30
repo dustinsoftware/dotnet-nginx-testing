@@ -1,13 +1,23 @@
 #!/bin/bash
+# Parse command line arguments
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --route-name) ROUTE_NAME="$2"; shift ;;
+        *) echo "Unknown parameter passed: $1"; exit 1 ;;
+    esac
+    shift
+done
 
-# Define the test cases
+# Check if ROUTE_NAME is set
+if [ -z "$ROUTE_NAME" ]; then
+    echo "Error: --route-name argument is required."
+    exit 1
+fi
+
 declare -a TEST_CASES=(
-    "nginx:18151/async-slow?delay=1000 -c 100"
-    "nginx:18151/async-slow?delay=1000 -c 500"
-    "nginx:18151/async-slow?delay=1000 -c 1000"
-    "nginx:18151/sync-slow?delay=1000 -c 100"
-    "nginx:18151/sync-slow?delay=1000 -c 500"
-    "nginx:18151/sync-slow?delay=1000 -c 1000"
+    "nginx:18151/$ROUTE_NAME -c 100"
+    "nginx:18151/$ROUTE_NAME -c 500"
+    "nginx:18151/$ROUTE_NAME -c 1000"
 )
 
 # Loop through the test cases and run bombardier for each
