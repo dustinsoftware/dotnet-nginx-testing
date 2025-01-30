@@ -57,6 +57,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     steps:
+    - uses: actions/checkout@v4
     - name: Download logs artifact
       uses: actions/download-artifact@v4
       with:
@@ -74,4 +75,3 @@ jobs:
       with:
         name: results
         path: results.csv
-  
