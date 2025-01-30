@@ -22,3 +22,14 @@ jobs:
       run: docker exec dotnet-nginx-testing-bombardier-1 /bombardier-scripts/run-tests.sh
     - name: Stop the Docker image
       run: docker compose down
+    - name: Capture logs
+      run: docker logs dotnet-nginx-testing-web-1 > logs/web-container.log
+    - name: Capture Nginx logs
+      run: docker logs dotnet-nginx-testing-nginx-1 > logs/nginx-container.log
+    - name: Capture Bombardier logs
+      run: docker logs dotnet-nginx-testing-bombardier-1 > logs/bombardier-container.log
+    - name: Upload logs as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: web-container-logs
+        path: logs/*.log
