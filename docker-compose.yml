@@ -1,10 +1,11 @@
-version: '3.8'
-
 services:
   web:
     build:
       context: .
       dockerfile: Dockerfile.web
+    depends_on:
+      sqlserver:
+        condition: service_healthy
 
   nginx:
     image: nginx:latest
@@ -19,6 +20,19 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.bombardier
-  
     depends_on:
       - nginx
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    environment:
+      SA_PASSWORD: "YourStrongPassw0rd"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - ./sqlserver-init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -C -U sa -P YourStrongPassw0rd -Q 'SELECT 1 FROM MyDatabase.MyTable'"]
+      interval: 1s
+      timeout: 10s
+      retries: 30
