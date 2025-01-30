@@ -11,11 +11,14 @@ public class ThreadPoolCheckMiddleware
         _next = next;
     }
 
-    public async Task InvokeAsync(HttpContext context)
+    public async Task InvokeAsync(HttpContext context, ILogger<ThreadPoolCheckMiddleware> logger)
     {
-        if (ThreadPool.PendingWorkItemCount > 500)
+        var pendingWorkItemCount = ThreadPool.PendingWorkItemCount;
+
+        if (pendingWorkItemCount > 500 && context.Request.Headers["use-thread-pool-limiter"] == "true")
         {
             context.Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
+            logger?.LogWarning("High pending work item count: {PendingWorkItemCount}", pendingWorkItemCount);
             await context.Response.WriteAsync("Service Unavailable");
         }
         else

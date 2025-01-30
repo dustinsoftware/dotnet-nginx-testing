@@ -11,6 +11,7 @@ services:
     image: nginx:latest
     ports:
       - "18151:18151"
+      - "18152:18152"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
