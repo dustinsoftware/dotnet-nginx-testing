@@ -40,7 +40,7 @@ jobs:
     - name: Runs the Docker image
       run: docker compose up -d
     - name: Run a moderate load test
-      run: docker exec dotnet-nginx-testing-bombardier-1 /bombardier-scripts/run-tests.sh --route-name $ROUTE_NAME --thread-pool-limiter $THREAD_POOL_LIMITER
+      run: docker exec dotnet-nginx-testing-bombardier-1 /bombardier-scripts/run-tests.sh --route-name $ROUTE_NAME --thread-pool-limiter $THREAD_POOL_LIMITER > logs/bombardier-container.log
     - name: Capture logs
       run: docker logs dotnet-nginx-testing-web-1 > logs/web-container.log
     - name: Capture Nginx logs
