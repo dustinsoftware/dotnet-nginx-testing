@@ -5,6 +5,7 @@ while [[ "$#" -gt 0 ]]; do
         --route-name) ROUTE_NAME="$2"; shift ;;
         --thread-pool-limiter) THREAD_POOL_LIMITER="$2"; shift ;;
         --host) HOST="$2"; shift ;;
+        --delay) DELAY="$2"; shift ;;
         *) echo "Unknown parameter passed: $1"; exit 1 ;;
     esac
     shift
@@ -17,10 +18,10 @@ if [ -z "$ROUTE_NAME" ] || [ -z "$HOST" ]; then
 fi
 
 declare -a TEST_CASES=(
-    "$HOST/$ROUTE_NAME -c 100"
-    "$HOST/$ROUTE_NAME -c 500"
-    "$HOST/$ROUTE_NAME -c 1000"
-    "$HOST/$ROUTE_NAME -c 2000"
+    "$HOST/$ROUTE_NAME?delay=$DELAY -c 100"
+    "$HOST/$ROUTE_NAME?delay=$DELAY -c 500"
+    "$HOST/$ROUTE_NAME?delay=$DELAY -c 1000"
+    "$HOST/$ROUTE_NAME?delay=$DELAY -c 2000"
 )
 
 # Loop through the test cases and run bombardier for each

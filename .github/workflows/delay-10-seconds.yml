@@ -27,12 +27,13 @@ jobs:
     strategy:
       matrix:
         thread_pool_limiter: [200, 400, 800, null]
-        route_name: ["async-slow?delay=10000", "sync-slow?delay=10000", "very-bad-sync-slow?delay=10000","sql-async-slow?delay=10000"]
+        route_name: ["async-slow", "sync-slow", "very-bad-sync-slow","sql-async-slow"]
         nginx_limit: [2000, 400]
 
     env:
       ROUTE_NAME: ${{ matrix.route_name }}
       THREAD_POOL_LIMITER: ${{ matrix.thread_pool_limiter }}
+      DELAY: 10000
 
     steps:
     - uses: actions/checkout@v4
@@ -48,7 +49,7 @@ jobs:
     - name: Runs the Docker image
       run: docker compose up -d
     - name: Run a moderate load test
-      run: docker exec dotnet-nginx-testing-bombardier-1 /bombardier-scripts/run-tests.sh --host $HOST --route-name $ROUTE_NAME --thread-pool-limiter $THREAD_POOL_LIMITER > logs/bombardier-container.log
+      run: docker exec dotnet-nginx-testing-bombardier-1 /bombardier-scripts/run-tests.sh --host $HOST --route-name $ROUTE_NAME --delay $DELAY --thread-pool-limiter $THREAD_POOL_LIMITER > logs/bombardier-container.log
     - name: Capture logs
       run: docker logs dotnet-nginx-testing-web-1 > logs/web-container.log
     - name: Capture Nginx logs
