@@ -20,7 +20,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    name: Run thread pool limiter tests
+    name: Test
 
     needs: build
 
