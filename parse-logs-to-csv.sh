@@ -25,13 +25,18 @@ done
 
 # Convert the CSV files to Markdown
 markdown_file="results.md"
-echo "| Directory | 100 connections | 500 connections | 1000 connections | 2000 connections |" > $markdown_file
-echo "|-----------|-----------------|-----------------|------------------|------------------|" >> $markdown_file
+echo "# Load test results" > $markdown_file
 echo "## 2xx Results" >> $markdown_file
+echo "| Directory | 100 connections | 500 connections | 1000 connections | 2000 connections |" >> $markdown_file
+echo "|-----------|-----------------|-----------------|------------------|------------------|" >> $markdown_file
 tail -n +2 $output_csv_2xx | while IFS=, read -r directory c100 c500 c1000 c2000; do
     echo "| $directory | $c100 | $c500 | $c1000 | $c2000 |" >> $markdown_file
 done
+
+echo "" >> $markdown_file
 echo "## 5xx Results" >> $markdown_file
+echo "| Directory | 100 connections | 500 connections | 1000 connections | 2000 connections |" >> $markdown_file
+echo "|-----------|-----------------|-----------------|------------------|------------------|" >> $markdown_file
 tail -n +2 $output_csv_5xx | while IFS=, read -r directory c100 c500 c1000 c2000; do
     echo "| $directory | $c100 | $c500 | $c1000 | $c2000 |" >> $markdown_file
 done

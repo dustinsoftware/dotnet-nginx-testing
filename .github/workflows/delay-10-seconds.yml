@@ -83,4 +83,10 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: results
-        path: results.csv
+        path: results*.csv
+    - name: Upload results.md
+      uses: actions/upload-artifact@v4
+      with:
+        name: results
+        path: results.md
+  
