@@ -55,9 +55,9 @@ app.MapGet("/sql-async-slow", async (int? delay = null) => {
     using var connection = new SqlConnection(connectionString);
     await connection.OpenAsync();
 
-    using var command = new SqlCommand(@"
+    using var command = new SqlCommand($@"
     use MyDatabase;
-    WAITFOR DELAY '00:00:01';
+    WAITFOR DELAY '00:00:{Math.Min(60000, Math.Max(0, Math.Floor((delay ?? 1000) / 1000m)))}';
     SELECT TOP 10 Name
     FROM [dbo].[MyTable]
     ORDER BY CreatedAt DESC;

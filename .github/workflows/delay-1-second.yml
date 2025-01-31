@@ -1,0 +1,85 @@
+name: Delay 1 second
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker compose build
+    - name: Pull compose
+      run: docker compose pull
+
+  test:
+    runs-on: ubuntu-latest
+    name: Run thread pool limiter tests
+
+    needs: build
+
+    strategy:
+      matrix:
+        thread_pool_limiter: [200, 400, 800, null]
+        route_name: [async-slow?delay=1000, sync-slow?delay=1000, very-bad-sync-slow?delay=1000,sql-async-slow?delay=1000]
+        nginx_limit: [2000, 400]
+
+    env:
+      ROUTE_NAME: ${{ matrix.route_name }}
+      THREAD_POOL_LIMITER: ${{ matrix.thread_pool_limiter }}
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set HOST based on host
+      run: |
+        if [ "${{ matrix.nginx_limit }}" == "2000" ]; then
+          echo "HOST=nginx:18151" >> $GITHUB_ENV
+        elif [ "${{ matrix.nginx_limit }}" == "400" ]; then
+          echo "HOST=nginx:18152" >> $GITHUB_ENV
+        fi
+    - name: Create logs directory
+      run: mkdir -p logs
+    - name: Runs the Docker image
+      run: docker compose up -d
+    - name: Run a moderate load test
+      run: docker exec dotnet-nginx-testing-bombardier-1 /bombardier-scripts/run-tests.sh --host $HOST --route-name $ROUTE_NAME --thread-pool-limiter $THREAD_POOL_LIMITER > logs/bombardier-container.log
+    - name: Capture logs
+      run: docker logs dotnet-nginx-testing-web-1 > logs/web-container.log
+    - name: Capture Nginx logs
+      run: docker logs dotnet-nginx-testing-nginx-1 > logs/nginx-container.log
+    - name: Upload logs as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: thread-pool-limiter-${{ matrix.nginx_limit }}-${{ matrix.thread_pool_limiter }}-${{ matrix.route_name }}
+        path: logs/*.log
+    - name: Stop the Docker image
+      run: docker compose down
+
+  analyze-logs:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+    - uses: actions/checkout@v4
+    - name: Download logs artifact
+      uses: actions/download-artifact@v4
+      with:
+        path: logs
+    - name: Analyze logs
+      run: |
+        ./parse-logs-to-csv.sh
+    - name: Upload logs folder
+      uses: actions/upload-artifact@v4
+      with:
+        name: all-logs
+        path: logs
+    - name: Upload results.csv
+      uses: actions/upload-artifact@v4
+      with:
+        name: results
+        path: results.csv
