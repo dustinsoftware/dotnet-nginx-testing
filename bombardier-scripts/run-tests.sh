@@ -4,22 +4,23 @@ while [[ "$#" -gt 0 ]]; do
     case $1 in
         --route-name) ROUTE_NAME="$2"; shift ;;
         --thread-pool-limiter) THREAD_POOL_LIMITER="$2"; shift ;;
+        --host) HOST="$2"; shift ;;
         *) echo "Unknown parameter passed: $1"; exit 1 ;;
     esac
     shift
 done
 
-# Check if ROUTE_NAME is set
-if [ -z "$ROUTE_NAME" ]; then
-    echo "Error: --route-name argument is required."
+# Check if ROUTE_NAME and HOST are set
+if [ -z "$ROUTE_NAME" ] || [ -z "$HOST" ]; then
+    echo "Error: --route-name and --host arguments are required."
     exit 1
 fi
 
 declare -a TEST_CASES=(
-    "nginx:18151/$ROUTE_NAME -c 100"
-    "nginx:18151/$ROUTE_NAME -c 500"
-    "nginx:18151/$ROUTE_NAME -c 1000"
-    "nginx:18151/$ROUTE_NAME -c 2000"
+    "$HOST/$ROUTE_NAME -c 100"
+    "$HOST/$ROUTE_NAME -c 500"
+    "$HOST/$ROUTE_NAME -c 1000"
+    "$HOST/$ROUTE_NAME -c 2000"
 )
 
 # Loop through the test cases and run bombardier for each

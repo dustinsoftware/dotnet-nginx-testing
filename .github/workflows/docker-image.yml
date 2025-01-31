@@ -28,6 +28,7 @@ jobs:
       matrix:
         thread_pool_limiter: [200, 400, 800, null]
         route_name: [async-slow, sync-slow, very-bad-sync-slow,sql-async-slow]
+        nginx_limit: [2000, 400]
 
     env:
       ROUTE_NAME: ${{ matrix.route_name }}
@@ -35,12 +36,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Set HOST based on host
+      run: |
+        if [ "${{ matrix.nginx_limit }}" == "2000" ]; then
+          echo "HOST=nginx:18151" >> $GITHUB_ENV
+        elif [ "${{ matrix.nginx_limit }}" == "400" ]; then
+          echo "HOST=nginx:18152" >> $GITHUB_ENV
+        fi
     - name: Create logs directory
       run: mkdir -p logs
     - name: Runs the Docker image
       run: docker compose up -d
     - name: Run a moderate load test
-      run: docker exec dotnet-nginx-testing-bombardier-1 /bombardier-scripts/run-tests.sh --route-name $ROUTE_NAME --thread-pool-limiter $THREAD_POOL_LIMITER > logs/bombardier-container.log
+      run: docker exec dotnet-nginx-testing-bombardier-1 /bombardier-scripts/run-tests.sh --host $HOST --route-name $ROUTE_NAME --thread-pool-limiter $THREAD_POOL_LIMITER > logs/bombardier-container.log
     - name: Capture logs
       run: docker logs dotnet-nginx-testing-web-1 > logs/web-container.log
     - name: Capture Nginx logs
@@ -48,7 +56,7 @@ jobs:
     - name: Upload logs as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: thread-pool-limiter-${{ matrix.thread_pool_limiter }}-${{ matrix.route_name }}
+        name: thread-pool-limiter-${{ matrix.nginx_limit }}-${{ matrix.thread_pool_limiter }}-${{ matrix.route_name }}
         path: logs/*.log
     - name: Stop the Docker image
       run: docker compose down
