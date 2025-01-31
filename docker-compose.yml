@@ -6,6 +6,9 @@ services:
     depends_on:
       sqlserver:
         condition: service_healthy
+      mock-http-server:
+        condition: service_started
+
 
   nginx:
     image: nginx:latest
@@ -44,3 +47,10 @@ services:
       interval: 10s
       timeout: 30s
       retries: 30
+
+  mock-http-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.mock-http-server
+    ports:
+      - "5237:5237"

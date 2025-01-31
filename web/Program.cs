@@ -74,6 +74,13 @@ app.MapGet("/sql-async-slow", async (int? delay = null) => {
     return names;
 });
 
+app.MapGet("/http-async-slow", async (int? delay = null) => {
+    using var httpClient = new HttpClient();
+    var response = await httpClient.GetAsync($"http://mock-http-server:5237/http-async-slow?delay={delay ?? 1000}");
+    var responseString = await response.EnsureSuccessStatusCode().Content.ReadAsStringAsync();
+    return responseString;
+});
+
 app.UseMiddleware<ThreadPoolCheckMiddleware>();
 
 
