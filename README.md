@@ -10,7 +10,7 @@ There are a few endpoints that can be hit
 Run each of these commands in a new terminal:
 - `docker compose up --build`
 - `docker exec -it dotnet-nginx-testing-web-1 /root/.dotnet/tools/dotnet-counters monitor --process-id 1 --providers Microsoft.AspNetCore.Hosting Microsoft.AspNetCore.Http.Connections Microsoft-AspNetCore-Server-Kestrel System.Runtime`
-- `docker exec -it dotnet-nginx-testing-bombardier-1 /bombardier-scripts/run-tests.sh --route-name "async-slow"`
+- `docker exec -it dotnet-nginx-testing-bombardier-1 /bombardier-scripts/run-tests.sh --route-name "async-slow" --thread-pool-limiter 100 --host nginx:18151`
 
 Or to run a one-off test, `docker exec dotnet-nginx-testing-bombardier-1 bombardier nginx:18151/async-slow -c 500 -t 30s`
 
