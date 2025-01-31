@@ -27,7 +27,7 @@ jobs:
     strategy:
       matrix:
         thread_pool_limiter: [200, 400, 800, null]
-        route_name: [async-slow?delay=1000, sync-slow?delay=1000, very-bad-sync-slow?delay=1000,sql-async-slow?delay=1000]
+        route_name: ["async-slow?delay=1000", "sync-slow?delay=1000", "very-bad-sync-slow?delay=1000","sql-async-slow?delay=1000"]
         nginx_limit: [2000, 400]
 
     env:
