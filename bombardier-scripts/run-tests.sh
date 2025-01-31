@@ -30,9 +30,9 @@ for TEST_CASE in "${TEST_CASES[@]}"; do
     
     echo "✨ Running test for URL: $URL with $CONNECTIONS connections"
     if [ -z "$THREAD_POOL_LIMITER" ]; then
-        bombardier -c $CONNECTIONS $URL
+        bombardier -c $CONNECTIONS -t 30s $URL
     else
-        bombardier -c $CONNECTIONS -H "thread-pool-limiter: $THREAD_POOL_LIMITER" $URL
+        bombardier -c $CONNECTIONS -t 30s -H "thread-pool-limiter: $THREAD_POOL_LIMITER" $URL
     fi
     
     if [ $? -eq 0 ]; then
