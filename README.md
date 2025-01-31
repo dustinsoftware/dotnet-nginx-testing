@@ -6,6 +6,7 @@ There are a few endpoints that can be hit
 - /very-bad-sync-slow - uses sync over async, blocks 2 threads for 1 second, then returns OK
 - /healthcheck - makes a sql query, returns OK without delay
 - /sql-async-slow - awaits a query that takes 1 second to execute, returns OK
+- /http-async-slow - awaits a slow request over a http boundary, returns OK
 
 Run each of these commands in a new terminal:
 - `docker compose up --build`
